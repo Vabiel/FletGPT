@@ -1,0 +1,2 @@
+flet==0.18.0
+git+https://github.com/xtekky/gpt4free.git
