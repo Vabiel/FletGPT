@@ -1,8 +1,3 @@
-import flet as ft
-import g4f
-
-import g4f
-
 import g4f
 
 class GptCore():
@@ -17,7 +12,7 @@ class GptCore():
         print(f"question: {question}")
         # print(f"history:\n{self.messages}")
         response = g4f.ChatCompletion.create(
-            model=g4f.models.gpt_35_turbo_16k,
+            model=g4f.models.gpt_4,
             messages=self.messages,
         )
         print(f"answer: {response}")

@@ -1,5 +1,4 @@
 import flet as ft
-import g4f
 from chat_item import ChatItem
 from chat_list import ChatList
 from gpt_core import GptCore
