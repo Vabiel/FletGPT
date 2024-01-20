@@ -16,6 +16,12 @@ class DI(object):
       cls.instance = super(DI, cls).__new__(cls)
     return cls.instance
 
+  def __enter__(self):
+    return self
+
+  def __exit__(self, exc_type, exc_value, exc_traceback):
+    self.db.conn.close()
+
   @property
   def db(self) -> DB:
     return self._db

@@ -1,27 +1,17 @@
-# Импортируем модуль sqlite3
 import sqlite3
 
-# Создаем класс DB для работы с базой данных
 class DB:
 
-  # Конструктор класса, принимает имя файла базы данных
   def __init__(self, db_file):
-    # Создаем подключение к базе данных
     self.conn = sqlite3.connect(db_file)
-    # Создаем курсор для выполнения SQL-запросов
     self.cursor = self.conn.cursor()
-    # Вызываем метод initDB для создания таблиц, если их нет
     self.initDB()
 
-  # Метод initDB для создания таблиц, если их нет
   def initDB(self):
-    # Получаем список всех таблиц в базе данных
     self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
     tables = self.cursor.fetchall()
 
-    # Проверяем, есть ли таблица чатов в списке
     if ('chats',) not in tables:
-      # Если нет, то создаем ее
       self.cursor.execute("""
         CREATE TABLE chats (
           chat_id TEXT PRIMARY KEY, -- идентификатор чата
@@ -30,9 +20,7 @@ class DB:
         );
       """)
 
-    # Проверяем, есть ли таблица пользователей в списке
     if ('users',) not in tables:
-      # Если нет, то создаем ее
       self.cursor.execute("""
         CREATE TABLE users (
           user_id TEXT PRIMARY KEY, -- идентификатор пользователя
@@ -41,9 +29,7 @@ class DB:
         );
       """)
 
-    # Проверяем, есть ли таблица сообщений в списке
     if ('messages',) not in tables:
-      # Если нет, то создаем ее
       self.cursor.execute("""
         CREATE TABLE messages (
           message_id TEXT PRIMARY KEY, -- идентификатор сообщения
@@ -57,13 +43,4 @@ class DB:
         );
       """)
 
-    # Сохраняем изменения в базе данных
     self.conn.commit()
-
-  # Деструктор класса, закрывает подключение к базе данных
-  def __del__(self):
-    # Закрываем подключение
-    self.conn.close()
-
-# Создаем объект класса DB, передавая имя файла базы данных
-# db = DB("chat_app.db")
