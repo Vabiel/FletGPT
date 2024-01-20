@@ -11,8 +11,8 @@ class ChatProvider:
 
   # Метод create_chat для создания нового чата в таблице chats
   def create_chat(self, chat: Chat):
-    sql = "INSERT INTO chats (chat_title, chat_date) VALUES (?, ?);"
-    self.db.cursor.execute(sql, (chat.chat_title, chat.chat_date))
+    sql = "INSERT INTO chats (chat_title, chat_date, chat_id) VALUES (?, ?, ?);"
+    self.db.cursor.execute(sql, (chat.chat_title, chat.chat_date, chat.chat_id))
     self.db.conn.commit()
 
   # Метод read_chat для получения данных о чате по его идентификатору из таблицы chats

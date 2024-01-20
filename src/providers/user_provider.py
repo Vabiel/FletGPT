@@ -10,8 +10,8 @@ class UserProvider:
 
   # Метод create_user для создания нового пользователя в таблице users
   def create_user(self, user: User):
-    sql = "INSERT INTO users (user_type, user_nickname) VALUES (?, ?);"
-    self.db.cursor.execute(sql, (user.user_type, user.user_nickname))
+    sql = "INSERT INTO users (user_type, user_nickname) VALUES (?, ?, ?);"
+    self.db.cursor.execute(sql, (user.user_type, user.user_nickname, user.user_id))
     self.db.conn.commit()
 
   # Метод read_user для получения данных о пользователе по его идентификатору из таблицы users

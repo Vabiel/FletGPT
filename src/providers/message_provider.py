@@ -10,8 +10,8 @@ class MessageProvider:
 
   # Метод create_message для создания нового сообщения в таблице messages
   def create_message(self, message: Message):
-    sql = "INSERT INTO messages (chat_id, user_id, message_type, message_text, message_date) VALUES (?, ?, ?, ?, ?);"
-    self.db.cursor.execute(sql, (message.chat_id, message.user_id, message.message_type, message.message_text, message.message_date))
+    sql = "INSERT INTO messages (chat_id, user_id, message_type, message_text, message_date) VALUES (?, ?, ?, ?, ?, ?);"
+    self.db.cursor.execute(sql, (message.chat_id, message.user_id, message.message_type, message.message_text, message.message_date, message.message_id))
     self.db.conn.commit()
 
   # Метод read_message для получения данных о сообщении по его идентификатору из таблицы messages
