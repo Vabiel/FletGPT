@@ -1,5 +1,6 @@
 import flet as ft
 
+
 class ChatList(ft.ListView):
     def __init__(self):
         super().__init__()
