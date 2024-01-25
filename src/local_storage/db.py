@@ -3,44 +3,57 @@ import sqlite3
 class DB:
 
   def __init__(self, db_file):
-    self.conn = sqlite3.connect(db_file)
-    self.cursor = self.conn.cursor()
+    self.db_file = db_file
+    
     self.initDB()
 
   def initDB(self):
-    self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    tables = self.cursor.fetchall()
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = cursor.fetchall()
 
     if ('chats',) not in tables:
-      self.cursor.execute("""
+      cursor.execute("""
         CREATE TABLE chats (
-          chat_id TEXT PRIMARY KEY, -- идентификатор чата
-          chat_title TEXT NOT NULL, -- заголовок чата
-          chat_date TEXT NOT NULL -- дата создания чата
+          chat_id TEXT PRIMARY KEY,
+          chat_title TEXT NOT NULL,
+          chat_date TEXT NOT NULL
         );
       """)
 
     if ('users',) not in tables:
-      self.cursor.execute("""
+      cursor.execute("""
         CREATE TABLE users (
-          user_id TEXT PRIMARY KEY, -- идентификатор пользователя
-          user_type TEXT NOT NULL, -- тип пользователя
-          user_nickname TEXT NOT NULL -- никнейм пользователя
+          user_id TEXT PRIMARY KEY,
+          user_type TEXT NOT NULL,
+          user_nickname TEXT NOT NULL
         );
       """)
 
     if ('messages',) not in tables:
-      self.cursor.execute("""
+      cursor.execute("""
         CREATE TABLE messages (
-          message_id TEXT PRIMARY KEY, -- идентификатор сообщения
-          chat_id TEXT NOT NULL, -- идентификатор чата
-          user_id TEXT NOT NULL, -- идентификатор пользователя
-          message_type TEXT NOT NULL, -- тип сообщения
-          message_text TEXT NOT NULL, -- текст сообщения
-          message_date TEXT NOT NULL, -- дата сообщения
-          FOREIGN KEY (chat_id) REFERENCES chats (chat_id) ON DELETE CASCADE, -- при удалении чата удаляются все сообщения связанные с ним
-          FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE -- при удалении пользователя удаляются все чаты и сообщения связанные с ним
+          message_id TEXT PRIMARY KEY,
+          chat_id TEXT NOT NULL,
+          user_id TEXT NOT NULL,
+          message_type TEXT NOT NULL,
+          message_text TEXT NOT NULL,
+          message_date TEXT NOT NULL,
+          FOREIGN KEY (chat_id) REFERENCES chats (chat_id) ON DELETE CASCADE,
+          FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
         );
       """)
 
-    self.conn.commit()
+    if ('user_settings',) not in tables:
+      cursor.execute("""
+        CREATE TABLE user_settings (
+          key TEXT PRIMARY KEY,
+          value TEXT NOT NULL,
+          type TEXT NOT NULL
+        );
+      """)
+     
+    conn.commit()
+    conn.close()
+    

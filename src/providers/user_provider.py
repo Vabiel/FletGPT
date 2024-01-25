@@ -1,4 +1,4 @@
-# Создаем класс UserProvider для работы с таблицей users
+import sqlite3
 from src.local_storage.db import DB
 from src.models.user import User
 
@@ -7,43 +7,86 @@ class UserProvider:
 
   def __init__(self, db: DB):
     self.db = db
+    self.db_file = self.db.db_file
 
-  # Метод create_user для создания нового пользователя в таблице users
   def create_user(self, user: User):
-    sql = "INSERT INTO users (user_type, user_nickname) VALUES (?, ?, ?);"
-    self.db.cursor.execute(sql, (user.user_type, user.user_nickname, user.user_id))
-    self.db.conn.commit()
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
+    sql = "INSERT INTO users (user_type, user_nickname, user_id) VALUES (?, ?, ?);"
+    cursor.execute(sql, (user.user_type, user.user_nickname, user.user_id))
+    conn.commit()
+    conn.close()
 
-  # Метод read_user для получения данных о пользователе по его идентификатору из таблицы users
-  def read_user(self, user_id):
+  def get_user(self, user_id):
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
     sql = "SELECT * FROM users WHERE user_id = ?;"
-    self.db.cursor.execute(sql, (user_id,))
-    result = self.db.cursor.fetchone()
+    cursor.execute(sql, (user_id,))
+    result = cursor.fetchone()
     if result:
       user = User(*result)
     else:
       user = None
+    conn.close()
     return user
 
-  # Метод update_user для обновления данных о пользователе по его идентификатору в таблице users
   def update_user(self, user: User):
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
     sql = "UPDATE users SET user_type = ?, user_nickname = ? WHERE user_id = ?;"
-    self.db.cursor.execute(sql, (user.user_type, user.user_nickname, user.user_id))
-    self.db.conn.commit()
+    cursor.execute(sql, (user.user_type, user.user_nickname, user.user_id))
+    conn.commit()
+    conn.close()
 
-  # Метод delete_user для удаления пользователя по его идентификатору из таблицы users
   def delete_user(self, user_id: str):
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
     sql = "DELETE FROM users WHERE user_id = ?;"
-    self.db.cursor.execute(sql, (user_id,))
-    self.db.conn.commit()
+    cursor.execute(sql, (user_id,))
+    conn.commit()
+    conn.close()
 
-  # Метод read_users_by_type для получения списка всех пользователей определенного типа из таблицы users
-  def read_users_by_type(self, user_type: str):
+  def get_users_by_type(self, user_type: str):
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
     sql = "SELECT * FROM users WHERE user_type = ?;"
-    self.db.cursor.execute(sql, (user_type,))
-    results = self.db.cursor.fetchall()
+    cursor.execute(sql, (user_type,))
+    results = cursor.fetchall()
     users = []
     for result in results:
       user = User(*result)
       users.append(user)
+    conn.close()
+    return users
+  
+  def get_user_by_type(self, user_type: str):
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
+    sql = "SELECT * FROM users WHERE user_type = ? LIMIT 1;"
+    cursor.execute(sql, (user_type,))
+    result = cursor.fetchone()
+    if result:
+      user = User(*result)
+    else:
+      user = None
+    conn.close()
+    return user
+  
+  def get_default_users(self) -> dict:
+    users = {}
+    result = self.get_user_by_type(User.DEFAULT_TYPE)
+    if result is User:
+      user = result
+    else:
+      user = User.default("You")
+      self.create_user(user)
+      users[User.DEFAULT_TYPE] = user
+      
+    gpt_result = self.get_user_by_type(User.GPT_TYPE)
+    if gpt_result is User:
+      gpt = gpt_result
+    else:
+      gpt = User.gpt("FletGPT")
+      self.create_user(gpt)
+      users[User.GPT_TYPE] = gpt 
     return users
