@@ -10,20 +10,14 @@ class GptCore:
             {"role": "assistant" if is_assistant else "user", "content": content}
         )
 
-    def ask_question(self, question: str) -> str:
+    def ask_question(self, question: str):
         self.add_message(content=question, is_assistant=False)
-        print(f"question: {question}")
-        # print(f"history:\n{self.messages}")
-        response = g4f.ChatCompletion.create(
-            model=g4f.models.gpt_4_turbo,
+
+        return g4f.ChatCompletion.create(    
+            model=g4f.models.gpt_4,
             messages=self.messages,
+            stream=True,
         )
-        print(f"answer: {response}")
-        answer = "\n".join(response) if isinstance(response, tuple) else response
-
-        self.add_message(content=answer, is_assistant=True)
-
-        return answer
 
     def clear_messages(self) -> None:
         self.messages.clear()

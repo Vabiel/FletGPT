@@ -18,6 +18,9 @@ class Message:
 
   def __str__(self):
     return f"Message {self.message_id}: {self.message_type} {self.message_text} from user {self.user_id} in chat {self.chat_id} on {self.message_date}"
+  
+  def update_text(self, text:str):
+    self.message_text+=text
 
   @staticmethod
   def create(chat_id: str, user: User, message_text: str):
