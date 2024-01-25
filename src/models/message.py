@@ -4,14 +4,11 @@ import datetime
 from src.models.chat import Chat
 from src.models.user import User
 
-# Создаем класс Message для представления данных о сообщении
 class Message:
   __USER_MESSAGE = "user_message_type"
   __GPT_MESSAGE = "gpt_message_type"
   
-  # Конструктор класса, принимает идентификатор, идентификатор чата, идентификатор пользователя, тип, текст и дату сообщения
   def __init__(self, message_id: str, chat_id: str, user_id: str, message_type: str, message_text: str, message_date: str):
-    # Сохраняем атрибуты в объекте класса
     self.message_id = message_id
     self.chat_id = chat_id
     self.user_id = user_id
@@ -19,9 +16,7 @@ class Message:
     self.message_text = message_text
     self.message_date = message_date
 
-  # Метод __str__ для возвращения строкового представления объекта класса
   def __str__(self):
-    # Формируем строку с данными о сообщении
     return f"Message {self.message_id}: {self.message_type} {self.message_text} from user {self.user_id} in chat {self.chat_id} on {self.message_date}"
 
   @staticmethod

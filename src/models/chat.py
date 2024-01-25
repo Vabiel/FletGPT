@@ -1,7 +1,6 @@
 import uuid
 import datetime
 
-# Создаем класс Chat для представления данных о чате
 class Chat:
 
   def __init__(self, chat_id: str, chat_title: str, chat_date: str):
