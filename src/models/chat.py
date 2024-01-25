@@ -12,7 +12,7 @@ class Chat:
     return f"Chat {self.chat_id}: {self.chat_title} ({self.chat_date})"
 
   @staticmethod
-  def create(chat_title: str):
+  def create(chat_title: str = "New chat"):
     uid = uuid.uuid4()
     current_datetime = datetime.datetime.now()
     datetime_str = current_datetime.strftime("%d-%m-%Y %H:%M:%S")
