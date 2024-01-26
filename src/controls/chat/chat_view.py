@@ -33,10 +33,8 @@ class ChatView(ft.Column):
         self.storage = di.storage
         
         if self.storage.contains_key("current_chat_id"):
-            print("YES")
             self.chat_id = self.storage.get("current_chat_id")
         else:
-            print("NO")
             self.chat_id = None
             
         self.gpt = GptCore()
