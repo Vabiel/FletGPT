@@ -1,5 +1,7 @@
 import flet as ft
 
+from src.app.gpt_model import GPTModel
+
 
 class SettingDialog:
     def __init__(self, page: ft.Page):
@@ -13,9 +15,8 @@ class SettingDialog:
                         label="Default GPT",
                         hint_text="Choose default provider",
                         options=[
-                            ft.dropdown.Option("3.5 turbo"),
-                            ft.dropdown.Option("4"),
-                            ft.dropdown.Option("4 turbo"),
+                            ft.dropdown.Option(model)
+                            for model in GPTModel.all
                         ],
                         autofocus=True,
                     )

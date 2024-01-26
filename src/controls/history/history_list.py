@@ -1,5 +1,6 @@
 import flet as ft
 
+from src.app.user_settings import UserSettings
 from src.app.events import Event
 from src.controls.history.history_item import HistoryItem
 from src.app.di import DI
@@ -89,13 +90,15 @@ class HistoryList(ft.Container):
         self.__load_chats()
         if self.current_chat_id == chat_id:
             self.current_chat_id = None
-            self.current_chat_id = self.storage.remove("current_chat_id")
+            self.current_chat_id = self.storage.remove(UserSettings.CURRENT_CHAT_ID)
             
         self.eventDispatcher.dispatch(event_name=Event.ON_DELETE_CHAT, data=chat)
         self.update()
     
     def __on_select(self, chat:Chat):
-        self.current_chat_id = chat.chat_id
-        self.eventDispatcher.dispatch(event_name=Event.ON_SELECT_CHAT, data=chat)
-        self.__refresh_list()
-        self.update()
+        chat_id = chat.chat_id
+        if self.current_chat_id != chat_id:
+            self.current_chat_id = chat_id
+            self.eventDispatcher.dispatch(event_name=Event.ON_SELECT_CHAT, data=chat)
+            self.__refresh_list()
+            self.update()
