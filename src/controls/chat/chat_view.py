@@ -19,7 +19,6 @@ class ChatView(ft.Column):
     def __init__(self, border, radius, color):
         super().__init__()
 
-        self.gpt = GptCore()
         self.messages = []
         self.chat_id = None
 
@@ -88,7 +87,7 @@ class ChatView(ft.Column):
             msg = ""
             self.update()
             
-            response = self.gpt.ask_question(self.__get_context())
+            response = GptCore.ask_question(self.__get_context())
             for message in response:
                 msg += message
                 last_item.subtitle.value = msg
