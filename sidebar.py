@@ -59,7 +59,9 @@ class Sidebar(ft.Container):
         
     
     def __on_create_chat(self, e):
-        chat = Chat.create()
+
+        count = len(self.chats)+1
+        chat = Chat.create(f"New chat {count}")
         chat_id = chat.chat_id
         self.current_chat_id = chat_id
         self.chatProvider.create_chat(chat)
