@@ -1,10 +1,10 @@
 import flet as ft
-from chat_item import ChatItem
 
-from chat_list import ChatList
-from di import DI
-from events import Event
-from gpt_core import GptCore
+from src.controls.chat.chat_item import ChatItem
+from src.controls.chat.chat_list import ChatList
+from src.app.di import DI
+from src.app.events import Event
+from src.app.gpt_core import GptCore
 from src.models.message import Message
 from src.models.user import User
 from src.models.chat import Chat

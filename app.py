@@ -1,8 +1,8 @@
 import flet as ft
-from chat_view import ChatView
-from di import DI
-from settings_dialog import SettingDialog
-from sidebar import Sidebar
+from src.controls.chat.chat_view import ChatView
+from src.app.di import DI
+from src.dialogs.settings_dialog import SettingDialog
+from src.controls.history.history_list import HistoryList
 
 
 DEFAULT_COLOR = ft.colors.BLUE
@@ -19,7 +19,7 @@ def main(page: ft.Page):
     page.add(
         ft.Row(
             [
-                Sidebar(
+                HistoryList(
                     border=DEFAULT_BORDER,
                     radius=DEFAULT_RADIUS,
                     bgcolor=DEFAULT_COLOR,

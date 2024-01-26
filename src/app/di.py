@@ -1,4 +1,4 @@
-from event_dispatcher import EventDispatcher
+from src.app.event_dispatcher import EventDispatcher
 from src.providers.user_settings_provider import UserSettingsProvider
 from src.local_storage.db import DB
 from src.providers.chat_provider import ChatProvider

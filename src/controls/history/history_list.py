@@ -1,12 +1,12 @@
 import flet as ft
-from events import Event
-from history_item import HistoryItem
 
-from di import DI
+from src.app.events import Event
+from src.controls.history.history_item import HistoryItem
+from src.app.di import DI
 from src.models.chat import Chat
 
 
-class Sidebar(ft.Container):
+class HistoryList(ft.Container):
     def __init__(self, border, bgcolor, radius, on_settings):
         super().__init__()
         di = DI.get_instance()
