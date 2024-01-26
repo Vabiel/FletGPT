@@ -72,34 +72,34 @@ class ChatView(ft.Column):
                 self.storage.set(UserSettings.CURRENT_CHAT_ID, chat.chat_id)
                 self.eventDispatcher.dispatch(Event.ON_ADD_CHAT, chat)
 
-            userMessage = Message.create(self.chat_id, self.user, question)
-            self.chat.controls.append(ChatItem(userMessage))
+            user_message = Message.create(self.chat_id, self.user, question)
+            self.chat.controls.append(ChatItem(user_message))
 
             self.input_text.value = ""
             self.input_text.read_only = True
-            self.messages.append(userMessage)
-            self.messageProvider.create_message(userMessage)
+            self.messages.append(user_message)
+            self.messageProvider.create_message(user_message)
             self.update()
 
-            gptMessage = Message.create(self.chat_id, self.gptUser, "")
-            self.chat.controls.append(ChatItem(gptMessage))
-            lastItem = self.chat.controls[-1]
-            lastItem.showLoader()
+            gpt_message = Message.create(self.chat_id, self.gptUser, "")
+            self.chat.controls.append(ChatItem(gpt_message))
+            last_item = self.chat.controls[-1]
+            last_item.showLoader()
             msg = ""
             self.update()
             
             response = self.gpt.ask_question(self.__get_context())
             for message in response:
                 msg += message
-                lastItem.subtitle.value = msg
-                lastItem.subtitle.update()
+                last_item.subtitle.value = msg
+                last_item.subtitle.update()
 
-            gptMessage.message_text = msg
-            lastItem.message.message_text = msg
-            lastItem.hideLoader()
+            gpt_message.message_text = msg
+            last_item.message.message_text = msg
+            last_item.hideLoader()
             self.input_text.read_only = False
-            self.messages.append(gptMessage)
-            self.messageProvider.create_message(gptMessage)
+            self.messages.append(gpt_message)
+            self.messageProvider.create_message(gpt_message)
             self.update()
 
     def __on_select_chat(self, data: Chat):
