@@ -227,4 +227,8 @@ class ChatView(ft.Column):
         self.gptUser = users[User.GPT_TYPE]
 
         if self.storage.contains_key(UserSettings.CURRENT_CHAT_ID):
-            self.chat_id = self.storage.get(UserSettings.CURRENT_CHAT_ID)
+            chat_id = self.storage.get(UserSettings.CURRENT_CHAT_ID)
+            if self.chatProvider.is_exists(chat_id):
+                self.chat_id = chat_id
+            else:
+                self.storage.remove(UserSettings.CURRENT_CHAT_ID)

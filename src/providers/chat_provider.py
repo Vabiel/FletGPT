@@ -61,3 +61,10 @@ class ChatProvider:
     cursor.execute(cascade_sql, (chat_id,))
     conn.commit()
     conn.close()
+    
+  def is_exists(self, chat_id:str) -> bool:
+    conn = sqlite3.connect(self.db_file)
+    cursor = conn.cursor()
+    sql = "SELECT 1 FROM chats WHERE chat_id = ?;"
+    cursor.execute(sql, (chat_id,))
+    return cursor.fetchone() is not None
