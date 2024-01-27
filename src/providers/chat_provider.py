@@ -57,5 +57,7 @@ class ChatProvider:
     cursor = conn.cursor()
     sql = "DELETE FROM chats WHERE chat_id = ?;"
     cursor.execute(sql, (chat_id,))
+    cascade_sql = "DELETE FROM messages WHERE chat_id = ?;"
+    cursor.execute(cascade_sql, (chat_id,))
     conn.commit()
     conn.close()
