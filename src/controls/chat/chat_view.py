@@ -87,9 +87,9 @@ class ChatView(ft.Column):
                     msg += message
                     last_item.subtitle.value = msg
                     last_item.subtitle.update()
-            except e:
-                error_msg = "an error occurred while executing the request"
-                print(f"{error_msg}:{e}")
+            except Exception as e:
+                error_msg = f"an error occurred while executing the request: {e.args[0]}"
+                print(error_msg)
                 msg += f"\n{error_msg}"
                 last_item.subtitle.value = msg
                 last_item.subtitle.update()
@@ -184,7 +184,7 @@ class ChatView(ft.Column):
     def __get_context(self) -> list:
         ignore_context_depth = self.ignore_context_depth
         if not ignore_context_depth:
-            depth = self.context_depth
+            depth = int(self.context_depth)
             messages = self.messages[-depth:] if len(self.messages) > depth else self.messages
         else:
             messages = self.messages
