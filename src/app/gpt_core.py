@@ -6,10 +6,10 @@ class GptCore:
         pass
 
     @staticmethod
-    def ask_question(context: list):
+    def ask_question(context: list, model: str):
 
         return g4f.ChatCompletion.create(
-            model=g4f.models.gpt_4,
+            model=model,
             messages=context,
             stream=True,
         )
