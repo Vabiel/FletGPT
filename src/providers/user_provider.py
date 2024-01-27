@@ -75,16 +75,16 @@ class UserProvider:
   def get_default_users(self) -> dict:
     users = {}
     result = self.get_user_by_type(User.DEFAULT_TYPE)
-    if result is User:
-      user = result
+    if result is not None:
+      users[User.DEFAULT_TYPE] = result
     else:
       user = User.default("You")
       self.create_user(user)
       users[User.DEFAULT_TYPE] = user
       
     gpt_result = self.get_user_by_type(User.GPT_TYPE)
-    if gpt_result is User:
-      gpt = gpt_result
+    if gpt_result is not None:
+      users[User.GPT_TYPE] = gpt_result
     else:
       gpt = User.gpt("FletGPT")
       self.create_user(gpt)
