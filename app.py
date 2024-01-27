@@ -14,7 +14,7 @@ def main(page: ft.Page):
     page.title = "FletGPT"
     di = DI.get_instance()
     di.set_storage(page.client_storage)
-    dialog = SettingDialog(page)
+    dialog = SettingDialog(page, DEFAULT_RADIUS, DEFAULT_COLOR)
 
     page.add(
         ft.Row(
@@ -23,7 +23,7 @@ def main(page: ft.Page):
                     border=DEFAULT_BORDER,
                     radius=DEFAULT_RADIUS,
                     bgcolor=DEFAULT_COLOR,
-                    on_settings=dialog.show,
+                    on_settings=dialog.on_show,
                 ),
                 ChatView(DEFAULT_BORDER, DEFAULT_RADIUS, DEFAULT_COLOR),
             ],
