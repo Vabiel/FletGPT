@@ -23,6 +23,9 @@ class HistoryList(ft.Container):
         self.eventDispatcher.subscribe(
             event_name=Event.ON_ADD_CHAT, handler=self.__on_add_chat
         )
+        self.eventDispatcher.subscribe(
+            event_name=Event.ON_SERVER_REQUEST, handler=self.__on_server_request
+        )
         self.list = ft.ListView(expand=True, auto_scroll=False, spacing=0)
         self.chats = []
         self.settings_form = SettingDialog(self.page, radius, bgcolor)
@@ -37,17 +40,25 @@ class HistoryList(ft.Container):
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
-        
+
         self.rename_input = ft.TextField(border_radius=radius, border_color=bgcolor)
-        
+
         self.rename_dlg = ft.AlertDialog(
             title=ft.Text("Enter a chat title"),
             content=self.rename_input,
             actions=[
-                ft.TextButton("Save", on_click=lambda e: self.__on_confirm_rename(True)),
+                ft.TextButton(
+                    "Save", on_click=lambda e: self.__on_confirm_rename(True)
+                ),
                 ft.TextButton("Cancel", on_click=lambda e: self.__on_confirm_rename()),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
+        )
+
+        self.create_btn = ft.TextButton(
+            "New chat",
+            icon=ft.icons.ADD,
+            on_click=self.__on_create_chat,
         )
 
         self.content = ft.Column(
@@ -55,11 +66,7 @@ class HistoryList(ft.Container):
                 ft.Row(
                     [
                         ft.Text("Chats history"),
-                        ft.TextButton(
-                            "New chat",
-                            icon=ft.icons.ADD,
-                            on_click=self.__on_create_chat,
-                        ),
+                        self.create_btn,
                     ]
                 ),
                 ft.Divider(color=bgcolor, height=1),
@@ -97,6 +104,11 @@ class HistoryList(ft.Container):
                 )
             )
 
+    def __on_server_request(self, is_started_request: bool):
+        self.list.disabled = is_started_request
+        self.create_btn.disabled = is_started_request
+        self.update()
+
     def __on_create_chat(self, e):
         count = len(self.chats) + 1
         chat = Chat.create(f"New chat {count}")
@@ -129,7 +141,7 @@ class HistoryList(ft.Container):
         if is_confirm:
             self.__on_delete(chat)
         self.page.update()
-        
+
     def __on_confirm_rename(self, is_confirm: bool = False):
         chat = self.rename_dlg.data
         self.rename_dlg.open = False
@@ -142,7 +154,7 @@ class HistoryList(ft.Container):
         self.page.dialog = self.delete_dlg
         self.delete_dlg.open = True
         self.page.update()
-        
+
     def __show_rename_dlg(self, chat: Chat):
         self.rename_dlg.data = chat
         self.rename_input.value = chat.chat_title

@@ -80,6 +80,7 @@ class ChatView(ft.Column):
             self.update()
             
             current_model = self.current_model
+            self.eventDispatcher.dispatch(Event.ON_SERVER_REQUEST, True)
             
             try:
                 response = GptCore.ask_question(self.__get_context(), current_model)
@@ -100,6 +101,7 @@ class ChatView(ft.Column):
                 self.input_text.read_only = False
                 self.messages.append(gpt_message)
                 self.messageProvider.create_message(gpt_message)
+                self.eventDispatcher.dispatch(Event.ON_SERVER_REQUEST, False)
                 self.update()
 
     def __create_new_chat(self):
@@ -124,12 +126,6 @@ class ChatView(ft.Column):
             self.storage.set(UserSettings.CURRENT_CHAT_ID, chat_id)
             self.__load_messages(chat_id)
             self.__update_chat()
-
-    def __lock_input(self):
-        self.input_text.read_only = True
-        
-    def __unlock_input(self):
-        self.input_text.read_only = False
 
     def __on_delete_chat(self, chat: Chat):
         chat_id = chat.chat_id
@@ -220,7 +216,7 @@ class ChatView(ft.Column):
         self.eventDispatcher.subscribe(
             event_name=Event.ON_CHANGE_SETTINGS, handler=self.__on_change_settings
         )
-        
+         
     def __restore_chat(self):
         users = self.userProvider.get_default_users()
         self.user = users[User.DEFAULT_TYPE]

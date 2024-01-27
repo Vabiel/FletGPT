@@ -8,3 +8,4 @@ class Event:
   ON_CREATE_CHAT = "on_create_chat"
   ON_ADD_CHAT = "on_add_chat"
   ON_CHANGE_SETTINGS = "on_change_settings"
+  ON_SERVER_REQUEST = "on_server_request"
