@@ -29,11 +29,23 @@ class HistoryList(ft.Container):
         self.__load_chats()
 
         self.delete_dlg = ft.AlertDialog(
-            title=ft.Text(f"Do you want delete chat?"),
+            title=ft.Text("Do you want delete chat?"),
             content=ft.Text("The action is irreversible, are you sure?"),
             actions=[
                 ft.TextButton("Yes", on_click=lambda e: self.__on_confirm_delete(True)),
                 ft.TextButton("No", on_click=lambda e: self.__on_confirm_delete()),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        
+        self.rename_input = ft.TextField(border_radius=radius, border_color=bgcolor)
+        
+        self.rename_dlg = ft.AlertDialog(
+            title=ft.Text("Enter a chat title"),
+            content=self.rename_input,
+            actions=[
+                ft.TextButton("Save", on_click=lambda e: self.__on_confirm_rename(True)),
+                ft.TextButton("Cancel", on_click=lambda e: self.__on_confirm_rename()),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
@@ -78,7 +90,7 @@ class HistoryList(ft.Container):
             self.list.controls.append(
                 HistoryItem(
                     chat,
-                    self.__on_rename,
+                    self.__show_rename_dlg,
                     self.__show_delete_dlg,
                     self.__on_select,
                     selected=chat.chat_id == self.current_chat_id,
@@ -105,9 +117,11 @@ class HistoryList(ft.Container):
             self.update()
 
     def __on_rename(self, chat: Chat):
-        print(chat.chat_id)
-        print(chat.chat_title)
-        print(chat.chat_date)
+        title = self.rename_input.value
+        updated_chat = chat
+        updated_chat.chat_title = title
+        self.chatProvider.update_chat(updated_chat)
+        self.__refresh_list()
 
     def __on_confirm_delete(self, is_confirm: bool = False):
         chat = self.delete_dlg.data
@@ -115,11 +129,25 @@ class HistoryList(ft.Container):
         if is_confirm:
             self.__on_delete(chat)
         self.page.update()
+        
+    def __on_confirm_rename(self, is_confirm: bool = False):
+        chat = self.rename_dlg.data
+        self.rename_dlg.open = False
+        if is_confirm:
+            self.__on_rename(chat)
+        self.page.update()
 
     def __show_delete_dlg(self, chat: Chat):
         self.delete_dlg.data = chat
         self.page.dialog = self.delete_dlg
         self.delete_dlg.open = True
+        self.page.update()
+        
+    def __show_rename_dlg(self, chat: Chat):
+        self.rename_dlg.data = chat
+        self.rename_input.value = chat.chat_title
+        self.page.dialog = self.rename_dlg
+        self.rename_dlg.open = True
         self.page.update()
 
     def __on_delete(self, chat: Chat):
