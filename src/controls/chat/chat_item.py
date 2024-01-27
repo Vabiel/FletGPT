@@ -36,7 +36,7 @@ class ChatItem(ft.ListTile):
             extension_set="gitHubFlavored",
             code_theme="atom-one-dark",
             code_style=ft.TextStyle(font_family="Roboto Mono"),
-            on_tap_link=lambda e: print(e.data),
+            on_tap_link=lambda e: self.page.launch_url(e.data),
         )
         self.content_padding = ft.padding.all(0.0)
         self.dense = True
